@@ -14,6 +14,9 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
+      - name: Установка Google Chrome
+        uses: browser-actions/setup-chrome@latest
+
       - name: Предоставить разрешение на выполнение для gradlew
         run: chmod +x gradlew
 
