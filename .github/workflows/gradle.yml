@@ -1,46 +1,21 @@
 name: Java CI with Gradle
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
 
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Настройка JDK 11
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'adopt'
-
-      - name: Установка Google Chrome
-        uses: browser-actions/setup-chrome@latest
-
-      - name: Предоставить разрешение на выполнение для gradlew
+      - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-
-      - name: Запустить SUT и выполнить автотесты
-        run: |
-          java -jar ./artifacts/app-replan-delivery.jar &
-          SERVER_PID=$!
-          trap "kill $SERVER_PID || true" EXIT
-
-          echo "Ожидание доступности SUT на порту 9999..."
-          SUT_PORT=9999
-          TIMEOUT=60
-          ELAPSED_TIME=0
-          until nc -z localhost $SUT_PORT; do
-            if [ $ELAPSED_TIME -ge $TIMEOUT ]; then
-              echo "SUT не запустился в течение $TIMEOUT секунд. Прерывание."
-              exit 1
-            fi
-            echo "SUT еще не готов, ожидание... (прошло: $ELAPSED_TIME/$TIMEOUT с)"
-            sleep 5
-            ELAPSED_TIME=$((ELAPSED_TIME + 5))
-          done
-          echo "SUT запущен и работает!"
-
-          ./gradlew test --info -Dselenide.headless=true
-        env:
-          SERVER_PORT: 9999
+      - name: Start SUT
+        run: java -jar ./artifacts/app-replan-delivery.jar &
+      - name: Build with Gradle
+        run: ./gradlew test --info -Dselenide.headless=true
