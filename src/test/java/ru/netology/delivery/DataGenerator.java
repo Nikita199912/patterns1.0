@@ -17,8 +17,6 @@ public class DataGenerator {
     }
 
     public static String generateCity() {
-        // Убедитесь, что эти города поддерживаются вашим приложением.
-        // Если приложение требует специфичные города или формат, этот список нужно будет скорректировать.
         var cities = new String[]{"Москва", "Тула", "Рязань", "Ярославль", "Тверь", "Владимир", "Калуга", "Тамбов", "Самара", "Саратов"};
         return cities[new Random().nextInt(cities.length)];
     }
@@ -31,8 +29,6 @@ public class DataGenerator {
 
     public static String generatePhone(String locale) {
         var faker = new Faker(new Locale(locale));
-        // Генерирует телефонный номер. Убедитесь, что формат номера, генерируемый Faker,
-        // соответствует требованиям валидации вашего приложения.
         return faker.phoneNumber().phoneNumber();
     }
 

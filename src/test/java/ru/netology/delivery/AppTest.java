@@ -27,8 +27,6 @@ public class AppTest {
 
     @BeforeEach
     void setup() {
-        // URL приложения, где SUT запущен.
-        // Это соответствует настройкам в gradle.yml, где SUT запускается на порту 9999.
         open("http://localhost:9999");
     }
 
@@ -41,9 +39,6 @@ public class AppTest {
         var daysAddtoSecond = 7;
         var secondMeeting = DataGenerator.generateDate(daysAddtoSecond);
 
-        // Ввод данных для первой встречи
-        // Предполагается, что эти data-test-id атрибуты и тексты кнопок/уведомлений
-        // соответствуют элементам в вашем приложении app-replan-delivery.jar
         $("[data-test-id='city'] input").setValue(validUser.getCity());
         $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
         $("[data-test-id='date'] input").setValue(firstMeeting);
@@ -52,25 +47,19 @@ public class AppTest {
         $("[data-test-id='agreement'] ").click();
         $(byText("Запланировать")).click();
 
-        // Проверка успешного планирования первой встречи
         $(byText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
         $("[data-test-id='success-notification'] .notification__content")
                 .shouldHave(exactText("Встреча успешно запланирована на " + firstMeeting))
                 .shouldBe(visible);
 
-        // Перепланирование встречи на другую дату
         $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
         $("[data-test-id='date'] input").setValue(secondMeeting);
         $(byText("Запланировать")).click();
 
-        // Проверка запроса на перепланирование
         $("[data-test-id='replan-notification'] .notification__content")
                 .shouldHave(text("У вас уже запланирована встреча на другую дату. Перепланировать?"))
                 .shouldBe(visible);
-        // Подтверждение перепланирования
         $("[data-test-id='replan-notification'] button ").click();
-
-        // Проверка успешного перепланирования
         $("[data-test-id='success-notification'] .notification__content")
                 .shouldHave(exactText("Встреча успешно запланирована на " + secondMeeting))
                 .shouldBe(visible);
