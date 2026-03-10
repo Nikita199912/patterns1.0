@@ -18,7 +18,6 @@ class CardDeliveryTest {
 
     @BeforeEach
     void setup() {
-        Configuration.headless = true;
         open("http://localhost:9999");
     }
 
@@ -31,7 +30,7 @@ class CardDeliveryTest {
         int daysToAddForSecondMeeting = 7;
         String secondMeetingDate = DataGenerator.generateDate(daysToAddForSecondMeeting);
 
-        // Первая подача заявки
+
         $("[data-test-id=city] input").setValue(validUser.getCity());
         $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("[data-test-id=date] input").setValue(firstMeetingDate);
